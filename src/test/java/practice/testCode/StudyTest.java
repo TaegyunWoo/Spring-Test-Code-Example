@@ -1,6 +1,5 @@
 package practice.testCode;
 
-import org.apache.ibatis.annotations.Param;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;

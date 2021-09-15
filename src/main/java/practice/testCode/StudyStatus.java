@@ -1,5 +1,5 @@
 package practice.testCode;
 
 public enum StudyStatus {
-    DRAFT, STARTED, ENDED
+    DRAFT, STARTED, ENDED, OPENED
 }

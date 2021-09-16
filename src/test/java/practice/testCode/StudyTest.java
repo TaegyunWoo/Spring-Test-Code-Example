@@ -36,7 +36,7 @@ class StudyTest {
     @DisplayName("Study 객체 생성 테스트")
     @EnabledOnOs(OS.WINDOWS)
     @Order(1)
-    @Tag("slow")
+    @Tag("myTag")
     void create() {
         //true인 경우, 본 테스트 메서드 수행
         assumeTrue(true);
@@ -96,13 +96,20 @@ class StudyTest {
 
     @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 1")
     @Order(5)
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}: 현재반복횟수={index}, 전달받은 매개변수값={0}")
     @ValueSource(ints = {10, 20, 40})
     void paramRepeatWithCustomTypeConvert(@ConvertWith(StudyConverter.class) Study study) {
         System.out.println("study.getLimit() = " + study.getLimit());
     }
 
     @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 2")
+    @ParameterizedTest(name = "{displayName} 현재반복횟수={index}, 전달받은 매개변수값={0}")
+    @ValueSource(strings = {"A", "B", "C"})
+    void paramRepeat(String s) {
+        System.out.println("s = " + s);
+    }
+
+    @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 3")
     @Order(6)
     @ParameterizedTest
     @CsvSource({"10, '자바'", "20, '공부'"})
@@ -110,7 +117,7 @@ class StudyTest {
         System.out.println("i = " + i + ", s = " + s);
     }
 
-    @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 3")
+    @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 4")
     @Order(7)
     @ParameterizedTest
     @CsvSource({"10, '자바'", "20, '공부'"})
@@ -119,7 +126,7 @@ class StudyTest {
         System.out.println("study = " + study);
     }
 
-    @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 4")
+    @DisplayName("커스텀 타입 컨버터 + 매개변수 반복 5")
     @Order(8)
     @ParameterizedTest
     @CsvSource({"10, '자바'", "20, '공부'"})
@@ -127,27 +134,32 @@ class StudyTest {
         System.out.println("study = " + study);
     }
 
-
-
-    @BeforeAll
-    static void beforeAll() {
-        System.out.println("StudyTest.beforeAll");
+    @Test
+    void test() {
+        assumingThat(false, () -> {
+            System.out.println("StudyTest.test");
+        });
     }
 
-    @AfterAll
-    static void afterAll() {
-        System.out.println("StudyTest.afterAll");
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        System.out.println("StudyTest.beforeEach");
-    }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println("StudyTest.afterEach");
-    }
+//    @BeforeAll
+//    static void beforeAll() {
+//        System.out.println("StudyTest.beforeAll");
+//    }
+//
+//    @AfterAll
+//    static void afterAll() {
+//        System.out.println("StudyTest.afterAll");
+//    }
+//
+//    @BeforeEach
+//    void beforeEach() {
+//        System.out.println("StudyTest.beforeEach");
+//    }
+//
+//    @AfterEach
+//    void afterEach() {
+//        System.out.println("StudyTest.afterEach");
+//    }
 
     static class StudyConverter extends SimpleArgumentConverter {
         @Override

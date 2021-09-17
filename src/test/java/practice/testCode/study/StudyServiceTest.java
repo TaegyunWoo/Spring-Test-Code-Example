@@ -197,5 +197,28 @@ class StudyServiceTest {
         then(memberService).shouldHaveNoMoreInteractions();
     }
 
+    @Test
+    void test(@Mock MemberService memberService,
+              @Mock StudyRepository studyRepository
+    ) {
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
 
+        //행동 정의
+//        when(memberService.findById(1L)).thenReturn(Optional.of(member)); //findById 메서드의 인수가 1L일 때만 동작
+//        when(memberService.findById(any())).thenReturn(Optional.of(member)); //findById 메서드의 인수에 상관없이 동작
+//        when(memberService.findById(1L)).thenThrow(new RuntimeException()); //findById 메서드의 인수가 1L일 때만 RuntimeException 던지기
+//        doThrow(new RuntimeException()).when(memberService).notify(any()); //notify 메서드의 인수에 상관없이 동작
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member))
+                                            .thenReturn(Optional.of(member))
+                                            .thenThrow(new RuntimeException());
+
+        studyService.createNewStudy(1L, study); //1번째 동작
+        studyService.createNewStudy(1L, study); //2번째 동작
+        studyService.createNewStudy(1L, study); //3번째 동작 => 예외발생
+    }
 }

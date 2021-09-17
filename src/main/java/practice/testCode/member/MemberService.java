@@ -19,5 +19,5 @@ public interface MemberService {
 
     void notify(Study newstudy);
 
-    void notify(Member member);
+//    void notify(Member member);
 }

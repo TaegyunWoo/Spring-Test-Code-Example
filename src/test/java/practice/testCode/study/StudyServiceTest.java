@@ -249,4 +249,29 @@ class StudyServiceTest {
         assertEquals(study, newStudy);
     }
 
+    @DisplayName("BDD 스타일 API")
+    @Test
+    void testBdd(@Mock MemberService memberService,
+                 @Mock StudyRepository studyRepository) {
+        //------------- given -------------
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
+
+        //행동 정의(given)
+        given(memberService.findById(1L)).willReturn(Optional.of(member));
+        given(studyRepository.save(study)).willReturn(study);
+
+        //------------- when -------------
+        Study newStudy = studyService.createNewStudy(1L, study);
+
+        //------------- then -------------
+        assertEquals(study, newStudy);
+
+        //행동 검증
+        then(memberService).should(times(1)).findById(1L);
+    }
+
 }

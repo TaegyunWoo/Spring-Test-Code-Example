@@ -1,5 +1,6 @@
 package practice.testCode.study;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -221,4 +222,31 @@ class StudyServiceTest {
         studyService.createNewStudy(1L, study); //2번째 동작
         studyService.createNewStudy(1L, study); //3번째 동작 => 예외발생
     }
+
+    @DisplayName("행동 검증")
+    @Test
+    void testValidation(@Mock MemberService memberService,
+                        @Mock StudyRepository studyRepository) {
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        Study study = new Study(10, "java");
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@test.com");
+
+        // ----------- 행동 정의 -----------
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(study)).thenReturn(study);
+
+        // ----------- 행동 호출 -----------
+        Study newStudy = studyService.createNewStudy(1L, study); //1번만 호출됨
+
+        // ----------- 행동 검증 -----------
+//        verify(memberService, times(1)).findById(1L); //횟수 검증
+        verify(memberService).findById(any()); //기준 시점 = notify()가 호출된 시점
+        verifyNoMoreInteractions(memberService); //기준 시점 이후에, memberService 객체(mock)가 사용되지 않았나?
+
+        // ----------- 테스트 검증 -----------
+        assertEquals(study, newStudy);
+    }
+
 }
